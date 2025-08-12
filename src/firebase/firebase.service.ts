@@ -29,6 +29,17 @@ export class FirebaseService {
             'FIREBASE_STORAGE_BUCKET',
           ),
         });
+        console.log(
+          'FIREBASE_PROJECT_ID:',
+          this.configService.get<string>('FIREBASE_PROJECT_ID'),
+        );
+        console.log(
+          'FIREBASE_CLIENT_EMAIL:',
+          this.configService.get<string>('FIREBASE_CLIENT_EMAIL'),
+        );
+        // For security, avoid logging private key but check if it's undefined or empty:
+        const key = this.configService.get<string>('FIREBASE_PRIVATE_KEY');
+        console.log('FIREBASE_PRIVATE_KEY is set:', !!key);
         this.logger.log('Firebase Admin SDK initialized successfully.');
       }
 
