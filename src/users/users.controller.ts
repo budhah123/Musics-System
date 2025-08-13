@@ -43,7 +43,7 @@ export class UsersController {
     return this.usersService.findUserByEmail(email);
   }
 
-  @UseGuards(JwtGuard)
+  // @UseGuards(JwtGuard)
   @Delete(':id')
    @ApiOperation({
     summary: 'Delete user by ID',
@@ -57,7 +57,7 @@ export class UsersController {
     return await this.usersService.deleteUser(id);
   }
 
-  @UseGuards(JwtGuard)
+  // @UseGuards(JwtGuard)
   @Put(':id')
   @ApiOperation({
     summary: 'Update user by ID',

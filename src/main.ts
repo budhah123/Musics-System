@@ -8,21 +8,21 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(
     new ValidationPipe({
-      whitelist: true,       
-      forbidNonWhitelisted: true, 
-      transform: true,  
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
     }),
   );
   dotenv.config();
 
   //enable CORS for all origins
 
-  app.enableCors ({
-    origin:"*",
-    methods:'GET, HEAD, PUT, DELETE, POST, PATCH',
-    allowedHeaders:'Content-Type, Authorization',
+  app.enableCors({
+    origin: '*',
+    methods: 'GET, HEAD, PUT, DELETE, POST, PATCH',
+    allowedHeaders: 'Content-Type, Authorization',
   });
-  
+
   // Swagger config
   const config = new DocumentBuilder()
     .setTitle('Music System API')
@@ -34,9 +34,7 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api-docs', app, document);
 
-    // Use Render's assigned port or fallback to 3000
   const port = process.env.PORT || 3000;
-
   await app.listen(port);
 
   console.log(`Application is running on: http://localhost:${port}`);
