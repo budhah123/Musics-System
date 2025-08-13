@@ -51,9 +51,16 @@ export class MusicsController {
         title: { type: 'string', description: 'Title of the music' },
         artist: { type: 'string', description: 'Artist name' },
         genre: { type: 'string', description: 'Genre of the music' },
-        duration: {type:'string', description: 'duration of the musics'}
+        duration: { type: 'string', description: 'duration of the musics' },
       },
-      required: ['musicFile', 'thumbnailFile', 'title', 'artist', 'genre','duration'],
+      required: [
+        'musicFile',
+        'thumbnailFile',
+        'title',
+        'artist',
+        'genre',
+        'duration',
+      ],
     },
   })
   @ApiResponse({ status: 201, description: 'Music created successfully' })
@@ -93,9 +100,9 @@ export class MusicsController {
     return this.musicsService.getAllMusics();
   }
 
-  @UseGuards(JwtGuard)
+  // @UseGuards(JwtGuard)
   @Delete(':id')
-   @ApiOperation({ summary: 'Delete a music entry by ID' })
+  @ApiOperation({ summary: 'Delete a music entry by ID' })
   @ApiParam({ name: 'id', description: 'Music ID', type: String })
   @ApiResponse({ status: 200, description: 'Music deleted successfully' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
