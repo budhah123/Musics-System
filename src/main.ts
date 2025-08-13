@@ -14,6 +14,14 @@ async function bootstrap() {
     }),
   );
   dotenv.config();
+
+  //enable CORS for all origins
+
+  app.enableCors ({
+    origin:"*",
+    methods:'GET, HEAD, PUT, DELETE, POST, PATCH',
+    allowedHeaders:'Content-Type, Authorization',
+  });
   
   // Swagger config
   const config = new DocumentBuilder()
