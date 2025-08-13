@@ -17,7 +17,8 @@ async createUser(dto: RegisterDTO) {
   const docRef = await db.collection('users').add({
     FullName: dto.FullName,
     email: dto.email,
-    password: hashedPassword,  // Store hashed password here
+    password: hashedPassword, 
+    userType: dto.userType, // Store hashed password here
     createdAt: new Date(),
   });
 

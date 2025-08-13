@@ -13,6 +13,9 @@ export class User{
   @Column()
   password: string;
 
+  @Column({default: 'users'})
+  userType: string;
+
   @CreateDateColumn()
   createdAt: Date;
 
