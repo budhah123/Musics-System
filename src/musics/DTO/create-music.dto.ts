@@ -26,4 +26,11 @@ export class CreateMusicDto {
   @IsOptional()
   @IsUrl()
   thumbnail?: string;
+
+  @ApiPropertyOptional({ description: 'URL of the thumbnail image' })
+  @IsOptional()
+  @IsUrl()
+  musicFile?: string;
+
+
 }

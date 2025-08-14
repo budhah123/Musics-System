@@ -4,6 +4,7 @@ import { FirebaseModule } from './firebase/firebase.module';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { MusicsModule } from './musics/musics.module';
+import { FavoritesModule } from './favorites/favorites.module';
 
 @Module({
   imports: [
@@ -11,7 +12,8 @@ import { MusicsModule } from './musics/musics.module';
     FirebaseModule,
     UsersModule,
     AuthModule,
-    MusicsModule
+    MusicsModule,
+    FavoritesModule
   ],
 })
 export class AppModule {}
