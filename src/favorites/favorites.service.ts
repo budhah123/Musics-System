@@ -7,7 +7,7 @@ import { create } from 'domain';
 @Injectable()
 export class FavoritesService {
   constructor(private readonly firebaseService: FirebaseService) {}
-  async addFavorites(dto:createFavoriteDTO) {
+  async addFavorites(dto: createFavoriteDTO) {
     const firestore = this.firebaseService.getFirestore();
 
     const userSnap = await firestore.collection('users').doc(dto.userId).get();
@@ -15,7 +15,10 @@ export class FavoritesService {
       throw new NotFoundException('Users not Found');
     }
 
-    const musicSnap = await firestore.collection('musics').doc(dto.musicId).get();
+    const musicSnap = await firestore
+      .collection('musics')
+      .doc(dto.musicId)
+      .get();
     if (!musicSnap) {
       throw new NotFoundException('Musics not Found!');
     }
@@ -43,7 +46,7 @@ export class FavoritesService {
     };
   }
 
-  async removeFavorites(dto:createFavoriteDTO) {
+  async removeFavorites(dto: createFavoriteDTO) {
     const firestore = await this.firebaseService.getFirestore();
 
     const favs = await firestore
@@ -52,29 +55,38 @@ export class FavoritesService {
       .where('musicId', '==', dto.musicId)
       .get();
 
-      if(favs.empty) {
-        throw new NotFoundException("Favorite not found!");
-      }
-      for(const doc of favs.docs) {
-        await doc.ref.delete();
-      }
-      return {
-        message: "musics removed from favorites"
-      }
+    if (favs.empty) {
+      throw new NotFoundException('Favorite not found!');
+    }
+    for (const doc of favs.docs) {
+      await doc.ref.delete();
+    }
+    return {
+      message: 'musics removed from favorites',
+    };
   }
   async getUserFavorites(userId: string) {
     const firestore = this.firebaseService.getFirestore();
-    const favsSnap = await firestore.collection('favorites').where('userId','==',userId).get();
+    const favsSnap = await firestore
+      .collection('favorites')
+      .where('userId', '==', userId)
+      .get();
 
-    const musicIds = favsSnap.docs.map(doc => doc.data().musicId);
-    if(!musicIds.length){
+    const musicIds = favsSnap.docs.map((doc) => doc.data().musicId);
+    if (!musicIds.length) {
       return [];
     }
-    const musicPromises = musicIds.map(id=> firestore.collection('musics').doc(id).get());
+    const musicPromises = musicIds.map((id) =>
+      firestore.collection('musics').doc(id).get(),
+    );
     const musicDocs = await Promise.all(musicPromises);
 
-    return musicDocs.filter(doc=> doc.exists).map(doc =>({
-      id: doc.id, ...doc.data()
-    }));
+    return musicDocs
+      .filter((doc) => doc.exists)
+      .map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
   }
+
 }
