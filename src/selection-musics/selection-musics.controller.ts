@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { selectionMusicsDTO } from './DTO/create-selection-musics.dto';
 import { SelectionMusicsService } from './selection-musics.service';
 
@@ -7,11 +15,21 @@ export class SelectionMusicsController {
   constructor(private readonly selectionService: SelectionMusicsService) {}
   @Post()
   async saveSelectedMusics(@Body() dto: selectionMusicsDTO) {
-    return this.selectionService.saveSelectionMusics(dto);
+    return await this.selectionService.saveSelectionMusics(dto);
   }
+@Get()
+async getMusicsById(
+  @Query('userId') userId?: string,
+  @Query('deviceId') deviceId?: string,
+) {
+  return await this.selectionService.getMusicsByUser(userId, deviceId);
+}
 
-  @Get(':userId')
-  async getMusicsById(@Param('userId') userId: string) {
-    return this.selectionService.getMusicsByUser(userId);
-  }
+  //   @Delete('/users/:userId')
+  // async deleteUserMusic(
+  //   @Param('userId') userId: string,
+
+  // ) {
+  //   return this.selectionService.deleteMusicsById(userId);
+  // }
 }
