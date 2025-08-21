@@ -15,4 +15,7 @@ export class RegisterDTO {
   @IsOptional()
   @IsString()
   userType?: string = 'users';
+
+  // @IsOptional()
+  // isSubscribed?: boolean = false;
 }

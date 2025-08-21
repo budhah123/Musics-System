@@ -7,5 +7,6 @@ export class DownloadDTO {
 
   @IsString()
   @IsNotEmpty({message:"required!"})
-  musicId: string
+  musicId: string;
+  
 }

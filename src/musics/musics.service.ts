@@ -69,7 +69,7 @@ export class MusicsService {
     const docRef = await firestore.collection('musics').add({
       title: dto.title,
       artist: dto.artist,
-      genre: dto.genre,
+      category: dto.category,
       duration: dto.duration,
       url: musicUrl,
       thumbnail: thumbnailUrl,
@@ -140,5 +140,33 @@ export class MusicsService {
     await docRef.delete();
 
     return { message: 'Music deleted successfully' };
+  }
+  async getMusicsByCategory(category: string) {
+    const firestore = this.firebaseService.getFirestore();
+    const snapshot = await firestore
+      .collection('musics')
+      .where('category', '==', category)
+      .get();
+    const musics: any[] = [];
+
+    snapshot.forEach((doc) => {
+      musics.push({
+        id: doc.id,
+        ...doc.data(),
+      });
+    });
+    return { category: category || 'all', musics };
+  }
+  async getMusicsById(musicId: string) {
+    const firestore = this.firebaseService.getFirestore();
+    const doc = await firestore.collection('musics').doc(musicId).get();
+    if(!doc) {
+      return {
+        message:"Music Id not Found!"
+      }
+    }
+    return {
+      id: doc.id, ...doc.data()
+    }
   }
 }

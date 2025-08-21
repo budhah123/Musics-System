@@ -6,6 +6,7 @@ import {
   Get,
   Param,
   Post,
+  Query,
   UploadedFiles,
   UseGuards,
   UseInterceptors,
@@ -50,7 +51,7 @@ export class MusicsController {
         },
         title: { type: 'string', description: 'Title of the music' },
         artist: { type: 'string', description: 'Artist name' },
-        genre: { type: 'string', description: 'Genre of the music' },
+        category: { type: 'string', description: 'category of the music' },
         duration: { type: 'string', description: 'duration of the musics' },
       },
       required: [
@@ -58,7 +59,7 @@ export class MusicsController {
         'thumbnailFile',
         'title',
         'artist',
-        'genre',
+        'category',
         'duration',
       ],
     },
@@ -109,5 +110,14 @@ export class MusicsController {
   @ApiResponse({ status: 404, description: 'Music not found' })
   async deleteMusic(@Param('id') id: string) {
     return this.musicsService.deleteMusic(id);
+  }
+
+  @Get('category')
+  async getMusicsByCategory(@Query('category') category: string) {
+    return await this.musicsService.getMusicsByCategory(category);
+  }
+  @Get(':id')
+  async getMusicById(@Param('id') id: string) {
+    return await this.musicsService.getMusicsById(id);
   }
 }

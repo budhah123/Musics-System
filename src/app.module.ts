@@ -6,6 +6,9 @@ import { AuthModule } from './auth/auth.module';
 import { MusicsModule } from './musics/musics.module';
 import { FavoritesModule } from './favorites/favorites.module';
 import { DownloadsModule } from './downloads/downloads.module';
+import { SelectionMusicsService } from './selection-musics/selection-musics.service';
+import { SelectionMusicsController } from './selection-musics/selection-musics.controller';
+import { SelectionMusicsModule } from './selection-musics/selection-musics.module';
 
 @Module({
   imports: [
@@ -15,7 +18,10 @@ import { DownloadsModule } from './downloads/downloads.module';
     AuthModule,
     MusicsModule,
     FavoritesModule,
-    DownloadsModule
+    DownloadsModule,
+    SelectionMusicsModule
   ],
+  providers: [SelectionMusicsService],
+  controllers: [SelectionMusicsController],
 })
 export class AppModule {}

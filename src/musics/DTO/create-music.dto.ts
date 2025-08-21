@@ -15,7 +15,7 @@ export class CreateMusicDto {
   @ApiPropertyOptional({ description: 'Genre of the music' })
   @IsOptional()
   @IsString()
-  genre?: string;
+  category?: string;
 
   @ApiPropertyOptional({ description: 'Duration in seconds', example: 240 })
   @IsOptional()

@@ -22,7 +22,7 @@ export class User{
 
   @UpdateDateColumn()
   updatedAt: Date;
-
-  // @OneToMany(() => (Favorite), (favorite) => favorite.user)
-  // favorite: Favorite;
+  
+  @Column({ default: false })
+  isSubscribed: boolean;
 }

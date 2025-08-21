@@ -18,7 +18,9 @@ async createUser(dto: RegisterDTO) {
     FullName: dto.FullName,
     email: dto.email,
     password: hashedPassword, 
-    userType: dto.userType, // Store hashed password here
+    userType: dto.userType, 
+
+    // Store hashed password here
     createdAt: new Date(),
   });
 
@@ -93,6 +95,15 @@ async updateUser(id: string, dto: UpdateUserDto) {
   }
 
 
+  }
+  async isUserSubscribed(userId: string): Promise<boolean> {
+    const firestore = this.firebaseService.getFirestore();
+    const userDoc = await firestore.collection('users').doc(userId).get();
+    if(!userDoc.exists) {
+     return false;
+    }
+    const userData = userDoc.data();
+    return userData?.isSubscribed ?? false;
   }
 }
     
