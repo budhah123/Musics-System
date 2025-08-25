@@ -36,4 +36,12 @@ export class SelectionMusicsController {
       dto.deviceId,
     );
   }
+
+  @Delete('/:userId/:musicId')
+  async deleteMusicById(@Param('userId') userId: string,@Param('musicId') musicId: string) {
+    if(!userId || !musicId) {
+      throw new BadRequestException('Both userId and MusicId are required!');
+    }
+    return await this.selectionService.deleteMusicsById(userId,musicId)
+  }
 }

@@ -99,7 +99,29 @@ export class SelectionMusicsService {
       }));
   }
 
-  async deleteMusicsById(userId: string, musicId: string) {}
+  async deleteMusicsById(userId: string, musicId: string) {
+    const firestore = this.firebaseService.getFirestore();
+    const querySnap = await firestore
+      .collection('selectedMusics')
+      .where('userId', '==', userId)
+      .where('musicId', '==', musicId)
+      .get();
+    if (querySnap.empty) {
+      return {
+        message: `No selection found for userId: ${userId} with musicId: ${musicId}`,
+      };
+    }
+    const batch = firestore.batch();
+    querySnap.forEach((doc) => {
+      batch.delete(doc.ref);
+    });
+    await batch.commit();
+    return {
+      message: ' selected Music Delete Successfully',
+      userId,
+      musicId,
+    };
+  }
 
   async associateGuestSelection(userId: string, deviceId: string) {
     const firestore = this.firebaseService.getFirestore();
