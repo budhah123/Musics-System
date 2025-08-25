@@ -98,30 +98,51 @@ export class SelectionMusicsService {
         ...doc.data(),
       }));
   }
+  async deleteMusicsById({
+  userId,
+  deviceId,
+  musicId,
+}: {
+  userId?: string;
+  deviceId?: string;
+  musicId: string;
+}) {
+  const firestore = this.firebaseService.getFirestore();
 
-  async deleteMusicsById(userId: string, musicId: string) {
-    const firestore = this.firebaseService.getFirestore();
-    const querySnap = await firestore
-      .collection('selectedMusics')
-      .where('userId', '==', userId)
-      .where('musicId', '==', musicId)
-      .get();
-    if (querySnap.empty) {
-      return {
-        message: `No selection found for userId: ${userId} with musicId: ${musicId}`,
-      };
-    }
-    const batch = firestore.batch();
-    querySnap.forEach((doc) => {
-      batch.delete(doc.ref);
-    });
-    await batch.commit();
+  // Build the query
+  let query = firestore.collection('selectedMusics').where('musicId', '==', musicId);
+
+  if (userId) {
+    query = query.where('userId', '==', userId);
+  } else if (deviceId) {
+    query = query.where('deviceId', '==', deviceId).where('userId', '==', null);
+  } else {
+    return { message: 'Please provide either userId or deviceId' };
+  }
+
+  const querySnap = await query.get();
+
+  if (querySnap.empty) {
     return {
-      message: ' selected Music Delete Successfully',
-      userId,
-      musicId,
+      message: `No selection found for provided userId/deviceId with musicId: ${musicId}`,
     };
   }
+
+  const batch = firestore.batch();
+  querySnap.forEach((doc) => {
+    batch.delete(doc.ref);
+  });
+
+  await batch.commit();
+
+  return {
+    message: 'Selected music deleted successfully!',
+    userId,
+    deviceId,
+    musicId,
+  };
+}
+
 
   async associateGuestSelection(userId: string, deviceId: string) {
     const firestore = this.firebaseService.getFirestore();
