@@ -100,4 +100,30 @@ export class SelectionMusicsService {
   }
 
   async deleteMusicsById(userId: string, musicId: string) {}
+
+  async associateGuestSelection(userId: string, deviceId: string) {
+    const firestore = this.firebaseService.getFirestore();
+
+    const querySnap = await firestore
+      .collection('selectedMusics')
+      .where('deviceId', '==', deviceId)
+      .where('userId', '==', null)
+      .get();
+
+    if (querySnap.empty) {
+      return {
+        message: 'No guest Selection found for this device!',
+      };
+    }
+    const batch = firestore.batch();
+    querySnap.forEach((doc) => {
+      batch.update(doc.ref, { userId });
+    });
+    await batch.commit();
+    return {
+      message: 'Guest selection linked with user account!',
+      userId,
+      deviceId,
+    };
+  }
 }

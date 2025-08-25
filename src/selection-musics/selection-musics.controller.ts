@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -9,6 +10,7 @@ import {
 } from '@nestjs/common';
 import { selectionMusicsDTO } from './DTO/create-selection-musics.dto';
 import { SelectionMusicsService } from './selection-musics.service';
+import { associateGuestDTO } from './DTO/associateSelectionDTO';
 
 @Controller('selection-musics')
 export class SelectionMusicsController {
@@ -17,19 +19,21 @@ export class SelectionMusicsController {
   async saveSelectedMusics(@Body() dto: selectionMusicsDTO) {
     return await this.selectionService.saveSelectionMusics(dto);
   }
-@Get()
-async getMusicsById(
-  @Query('userId') userId?: string,
-  @Query('deviceId') deviceId?: string,
-) {
-  return await this.selectionService.getMusicsByUser(userId, deviceId);
-}
-
-  //   @Delete('/users/:userId')
-  // async deleteUserMusic(
-  //   @Param('userId') userId: string,
-
-  // ) {
-  //   return this.selectionService.deleteMusicsById(userId);
-  // }
+  @Get()
+  async getMusicsById(
+    @Query('userId') userId?: string,
+    @Query('deviceId') deviceId?: string,
+  ) {
+    return await this.selectionService.getMusicsByUser(userId, deviceId);
+  }
+  @Post('associate-guest')
+  async associateGuest(@Body() dto: associateGuestDTO) {
+    if (!dto.userId || !dto.deviceId) {
+      throw new BadRequestException('Both userId and deviceId are required');
+    }
+    return await this.selectionService.associateGuestSelection(
+      dto.userId,
+      dto.deviceId,
+    );
+  }
 }
