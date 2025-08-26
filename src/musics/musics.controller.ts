@@ -20,6 +20,7 @@ import {
   ApiConsumes,
   ApiOperation,
   ApiParam,
+  ApiQuery,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
@@ -51,7 +52,7 @@ export class MusicsController {
         },
         title: { type: 'string', description: 'Title of the music' },
         artist: { type: 'string', description: 'Artist name' },
-        category: { type: 'string', description: 'category of the music' },
+        genre: { type: 'string', description: 'genre of the music' },
         duration: { type: 'string', description: 'duration of the musics' },
       },
       required: [
@@ -59,7 +60,7 @@ export class MusicsController {
         'thumbnailFile',
         'title',
         'artist',
-        'category',
+        'genre',
         'duration',
       ],
     },
@@ -112,9 +113,16 @@ export class MusicsController {
     return this.musicsService.deleteMusic(id);
   }
 
-  @Get('category')
-  async getMusicsByCategory(@Query('category') category: string) {
-    return await this.musicsService.getMusicsByCategory(category);
+  @Get()
+  @ApiOperation({ summary: 'Get musics by genre' })
+  @ApiQuery({
+    name: 'genre',
+    type: String,
+    description: 'The genre of musics (e.g. rap, pop, hip-Hop)',
+    required: true,
+  })
+  async getMusicsByCategory(@Query('genre') genre: string) {
+    return await this.musicsService.getMusicsByCategory(genre);
   }
   @Get(':id')
   async getMusicById(@Param('id') id: string) {

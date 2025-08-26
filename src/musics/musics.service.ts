@@ -69,7 +69,7 @@ export class MusicsService {
     const docRef = await firestore.collection('musics').add({
       title: dto.title,
       artist: dto.artist,
-      category: dto.category,
+      genre: dto.genre,
       duration: dto.duration,
       url: musicUrl,
       thumbnail: thumbnailUrl,
@@ -141,11 +141,11 @@ export class MusicsService {
 
     return { message: 'Music deleted successfully' };
   }
-  async getMusicsByCategory(category: string) {
+  async getMusicsByCategory(genre: string) {
     const firestore = this.firebaseService.getFirestore();
     const snapshot = await firestore
       .collection('musics')
-      .where('category', '==', category)
+      .where('genre', '==', genre)
       .get();
     const musics: any[] = [];
 
@@ -155,7 +155,7 @@ export class MusicsService {
         ...doc.data(),
       });
     });
-    return { category: category || 'all', musics };
+    return { genre: genre || 'all', musics };
   }
   async getMusicsById(musicId: string) {
     const firestore = this.firebaseService.getFirestore();

@@ -12,7 +12,7 @@ export class Music {
   artist: string;
 
   @Column()
-  category: string;
+  genre: string;
 
   @Column()
   duration: string;
