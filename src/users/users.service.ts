@@ -3,6 +3,7 @@ import { FirebaseService } from 'src/firebase/firebase.service';
 import { RegisterDTO } from './DTO/Register.DTO';
 import * as bcrypt from 'bcrypt';
 import { UpdateUserDto } from './DTO/update-user.dto';
+import { formateDateTimeUTC } from 'src/Format Date/formateDate';
 
 @Injectable()
 export class UsersService {
@@ -19,9 +20,7 @@ async createUser(dto: RegisterDTO) {
     email: dto.email,
     password: hashedPassword, 
     userType: dto.userType, 
-
-    // Store hashed password here
-    createdAt: new Date(),
+    createdAt: formateDateTimeUTC(new Date()),
   });
 
   return { id: docRef.id, ...dto, password: undefined }; // avoid returning password
@@ -83,18 +82,20 @@ async updateUser(id: string, dto: UpdateUserDto) {
   if (dto.password) {
     dto.password = await bcrypt.hash(dto.password, 10);
   }
-  await userRef.update({
-    ...dto,
-    updatedAt: new Date(),
-  });
+   const updateData = {
+    ...Object.fromEntries(
+      Object.entries(dto).filter(([_, value]) => value !== undefined)
+    ),
+    updatedAt: formateDateTimeUTC(new Date()),
+  };
+
+  await userRef.update(updateData); 
 
   const updateDoc = await userRef.get();
 
   return {
     id: updateDoc.id, ...updateDoc.data()
   }
-
-
   }
   async isUserSubscribed(userId: string): Promise<boolean> {
     const firestore = this.firebaseService.getFirestore();

@@ -1,7 +1,8 @@
 import { IsOptional, IsString, IsUrl } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
+import { Transform } from 'class-transformer';
 
-export class CreateMusicDto {
+export class UpdateMusicDto {
   @ApiPropertyOptional({ description: 'Title of the music' })
   @IsOptional()
   @IsString()
@@ -20,9 +21,10 @@ export class CreateMusicDto {
   @ApiPropertyOptional({ description: 'Category of the music' })
   @IsOptional()
   @IsString()
+  @Transform(({ obj }) => obj.CategoryId || obj.categoryId)
   categoryId?: string;
 
-  @ApiPropertyOptional({ description: 'Duration in seconds', example: 240 })
+  @ApiPropertyOptional({ description: 'Duration in seconds' })
   @IsOptional()
   @IsString()
   duration?: string;
@@ -32,7 +34,7 @@ export class CreateMusicDto {
   @IsUrl()
   thumbnail?: string;
 
-  @ApiPropertyOptional({ description: 'URL of the thumbnail image' })
+  @ApiPropertyOptional({ description: 'URL of the music file' })
   @IsOptional()
   @IsUrl()
   musicFile?: string;

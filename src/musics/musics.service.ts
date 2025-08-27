@@ -6,6 +6,8 @@ import {
 import { FirebaseService } from '../firebase/firebase.service';
 import { CreateMusicDto } from './DTO/create-music.dto';
 import * as admin from 'firebase-admin';
+import { formateDateTimeUTC } from 'src/Format Date/formateDate';
+import { UpdateMusicDto } from './DTO/update-music.DTO';
 
 @Injectable()
 export class MusicsService {
@@ -71,9 +73,10 @@ export class MusicsService {
       artist: dto.artist,
       genre: dto.genre,
       duration: dto.duration,
+      categoryId: dto.categoryId,
       url: musicUrl,
       thumbnail: thumbnailUrl,
-      createdAt: admin.firestore.FieldValue.serverTimestamp(),
+      createdAt: formateDateTimeUTC(new Date()),
     });
 
     return {
@@ -160,13 +163,36 @@ export class MusicsService {
   async getMusicsById(musicId: string) {
     const firestore = this.firebaseService.getFirestore();
     const doc = await firestore.collection('musics').doc(musicId).get();
-    if(!doc) {
+    if (!doc) {
       return {
-        message:"Music Id not Found!"
-      }
+        message: 'Music Id not Found!',
+      };
     }
     return {
-      id: doc.id, ...doc.data()
+      id: doc.id,
+      ...doc.data(),
+    };
+  }
+
+  async updateMusicById(musicId: string, dto: UpdateMusicDto) {
+    const firestore = this.firebaseService.getFirestore();
+    const docRef = await firestore.collection('musics').doc(musicId);
+    const doc = await docRef.get();
+
+    if (!doc.exists) {
+      throw new NotFoundException('Music Not found!');
     }
+    const updateData = {
+      ...Object.fromEntries(
+        Object.entries(dto).filter(([_, value]) => value !== undefined),
+      ),
+      updatedAt: formateDateTimeUTC(new Date()),
+    };
+    await docRef.update(updateData);
+    const updateDoc = await docRef.get();
+    return {
+      id: updateDoc.id,
+      ...updateDoc.data(),
+    };
   }
 }

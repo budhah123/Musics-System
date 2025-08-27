@@ -15,6 +15,9 @@ export class Music {
   genre: string;
 
   @Column()
+  categoryId: string;
+
+  @Column()
   duration: string;
 
   @Column()

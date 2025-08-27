@@ -6,6 +6,7 @@ import {
   Get,
   Param,
   Post,
+  Put,
   Query,
   UploadedFiles,
   UseGuards,
@@ -25,6 +26,8 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { JwtGuard } from 'src/auth/guards/jwt-auth.guards';
+import { Category } from 'src/category/category.entity';
+import { UpdateMusicDto } from './DTO/update-music.DTO';
 
 @ApiTags('musics')
 @ApiBearerAuth()
@@ -53,6 +56,7 @@ export class MusicsController {
         title: { type: 'string', description: 'Title of the music' },
         artist: { type: 'string', description: 'Artist name' },
         genre: { type: 'string', description: 'genre of the music' },
+        categoryId: { type: 'string', description: 'categoryId of the music' },
         duration: { type: 'string', description: 'duration of the musics' },
       },
       required: [
@@ -62,6 +66,7 @@ export class MusicsController {
         'artist',
         'genre',
         'duration',
+        'categoryId',
       ],
     },
   })
@@ -125,7 +130,25 @@ export class MusicsController {
     return await this.musicsService.getMusicsByCategory(genre);
   }
   @Get(':id')
+  @ApiOperation({ summary: 'Get a music by ID' })
+  @ApiParam({ name: 'id', description: 'ID of the music', type: String })
+  @ApiResponse({ status: 200, description: 'Music retrieved successfully' })
+  @ApiResponse({ status: 404, description: 'Music not found' })
   async getMusicById(@Param('id') id: string) {
     return await this.musicsService.getMusicsById(id);
+  }
+
+  @Put(':id')
+  @ApiOperation({ summary: 'Update a music by ID' })
+  @ApiParam({ name: 'id', description: 'ID of the music', type: String })
+  @ApiBody({ type: UpdateMusicDto, description: 'Fields to update' })
+  @ApiResponse({ status: 200, description: 'Music updated successfully' })
+  @ApiResponse({ status: 404, description: 'Music not found' })
+  async updateMusic(@Param('id') id: string, @Body() dto: UpdateMusicDto) {
+    const updateData = await this.musicsService.updateMusicById(id, dto);
+    return {
+      message: 'Music Update Successfully!',
+      data: updateData,
+    };
   }
 }

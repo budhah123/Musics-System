@@ -9,6 +9,7 @@ import { DownloadsModule } from './downloads/downloads.module';
 import { SelectionMusicsService } from './selection-musics/selection-musics.service';
 import { SelectionMusicsController } from './selection-musics/selection-musics.controller';
 import { SelectionMusicsModule } from './selection-musics/selection-musics.module';
+import { CategoryModule } from './category/category.module';
 
 @Module({
   imports: [
@@ -19,7 +20,8 @@ import { SelectionMusicsModule } from './selection-musics/selection-musics.modul
     MusicsModule,
     FavoritesModule,
     DownloadsModule,
-    SelectionMusicsModule
+    SelectionMusicsModule,
+    CategoryModule
   ],
   providers: [SelectionMusicsService],
   controllers: [SelectionMusicsController],
