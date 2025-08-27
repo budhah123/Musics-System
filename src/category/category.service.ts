@@ -29,19 +29,17 @@ export class CategoryService {
     }
     const musicSnap = await firestore
       .collection('musics')
-      .where('categoryId', '==', categoryId)
-      .get();
+      .where('categoryId', '==', categoryId).get();
 
-    const musics = musicSnap.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
-    return {
-      category: {
-        id: categoryId,
-        ...categoryDoc.data(),
-      },
-      musics,
-    };
+      const musics = musicSnap.docs.map((doc)=> ({
+        id: doc.id, ...doc.data()
+      }));
+      return {
+        category: {
+          id: categoryId, ...categoryDoc.data()
+        },
+        musics
+      }
+
   }
 }
