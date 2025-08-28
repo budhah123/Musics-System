@@ -1,10 +1,17 @@
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { categoryDTO } from './DTO/create-category.dto';
 import { CategoryService } from './category.service';
-import { ApiBody, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBody,
+  ApiOperation,
+  ApiParam,
+  ApiQuery,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 
 @ApiTags('Music Categories')
-@Controller('musics')
+@Controller('/music')
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
   @Post('category')
@@ -15,13 +22,22 @@ export class CategoryController {
   async saveMusicsCategory(@Body() dto: categoryDTO) {
     return await this.categoryService.createCategory(dto);
   }
-
-  @Get()
+  @Get('categories')
+  @ApiOperation({ summary: 'Get all categories' })
+  @ApiResponse({ status: 200, description: 'List of all categories' })
+  @ApiResponse({ status: 404, description: 'No categories found' })
+  async findAllCategory() {
+    return await this.categoryService.findAllCategory();
+  }
   @ApiOperation({ summary: 'Get musics by category ID' })
-  @ApiQuery({ name: 'categoryId', required: true, description: 'The ID of the category' })
-  @ApiResponse({ status: 200, description: 'List of musics found for the category' })
+  @ApiParam({ name: 'id', description: 'The ID of the category' })
+  @ApiResponse({
+    status: 200,
+    description: 'List of musics found for the category',
+  })
   @ApiResponse({ status: 404, description: 'Category not found' })
-  async musicsFindByCategory(@Query('categoryId') categoryId: string) {
+  @Get('category/:id')
+  async musicsFindByCategory(@Param('id') categoryId: string) {
     return await this.categoryService.findCategoryById(categoryId);
   }
 }
