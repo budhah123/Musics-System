@@ -10,6 +10,7 @@ import { SelectionMusicsService } from './selection-musics/selection-musics.serv
 import { SelectionMusicsController } from './selection-musics/selection-musics.controller';
 import { SelectionMusicsModule } from './selection-musics/selection-musics.module';
 import { CategoryModule } from './category/category.module';
+import { QuestionsModule } from './questions/questions.module';
 
 @Module({
   imports: [
@@ -21,7 +22,8 @@ import { CategoryModule } from './category/category.module';
     FavoritesModule,
     DownloadsModule,
     SelectionMusicsModule,
-    CategoryModule
+    CategoryModule,
+    QuestionsModule
   ],
   providers: [SelectionMusicsService],
   controllers: [SelectionMusicsController],
