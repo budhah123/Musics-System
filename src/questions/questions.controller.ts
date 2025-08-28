@@ -13,6 +13,10 @@ export class QuestionsController {
     return await this.questionService.create(dto);
   }
 
+  @Get(':id')
+  async FindOneQuestion(@Param('id') id: string) {
+    return await this.questionService.findOne(id);
+  }
   @Get()
   async findAllQuestion() {
     return await this.questionService.findAll();

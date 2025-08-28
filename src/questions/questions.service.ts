@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { FirebaseService } from 'src/firebase/firebase.service';
 import { createQuestionDto } from './DTO/create-question.dto';
 import { text } from 'stream/consumers';
@@ -42,8 +42,7 @@ export class QuestionsService {
         .where('questionId', '==', doc.id)
         .get();
 
-
-        results.push({
+      results.push({
         id: doc.id,
         ...doc.data(),
         options: optionsSnap.docs.map((o) => ({ id: o.id, ...o.data() })),
@@ -58,10 +57,32 @@ export class QuestionsService {
       userId,
       questionId,
       optionId,
-      createdAt: formateDateTimeUTC(new Date())
+      createdAt: formateDateTimeUTC(new Date()),
     });
     return {
-      message: "Answer Saved", id: answerRef.id
+      message: 'Answer Saved',
+      id: answerRef.id,
+    };
+  }
+
+  async findOne(id: string) {
+    const firestore = this.firebaseService.getFirestore();
+    const questionDoc = await firestore.collection('questions').doc(id).get();
+    if (!questionDoc.exists) {
+      throw new NotFoundException(`Questions with id :${id} not Found!`);
     }
+    const optionsSnap = await firestore
+      .collection('options')
+      .where('questionId', '==', id)
+      .get();
+
+    return {
+      id: questionDoc.id,
+      ...questionDoc.data(),
+      options: optionsSnap.docs.map((o) => ({
+        id: o.id,
+        ...o.data(),
+      })),
+    };
   }
 }
